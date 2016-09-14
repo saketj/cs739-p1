@@ -65,16 +65,19 @@ bool Decision_To_Drop(double probability)
 
 int UDP_Read_With_Drop(int sd, struct sockaddr_in *addr, char *buffer, int n, double drop_out_perc)
 {
-	 int len = sizeof(struct sockaddr_in);
-         int rc= recvfrom(sd, buffer, n, 0, (struct sockaddr *) addr,(socklen_t *) &len);
+	int len = sizeof(struct sockaddr_in);
+        int rc= recvfrom(sd, buffer, n, 0, (struct sockaddr *) addr,(socklen_t *) &len);
 	
+	if (drop_out_perc == 0)
+	{
+		return rc; 
+	}	
 	//decides to drop -->
 	if (Decision_To_Drop(drop_out_perc))
 	{
 		rc =0;
 		printf("Dropping message from client\n");
-	}
- 
+	} 
 	return rc; 
 }
 

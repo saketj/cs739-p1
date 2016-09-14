@@ -4,15 +4,18 @@
 
 int main(int argc, char *argv[])
 {
-	int sd = UDP_Open(20000);
+	int timeout;
+        sscanf(argv[1], "%d", &timeout);
 	struct sockaddr_in addr, addr2;
+
+	int sd = UDP_Open(20000);
+
 	int rc = UDP_FillSockAddr(&addr, "machine.cs.wisc.edu", 10000);
-	char ack_message[BUFFER_SIZE];
 
 	char message[BUFFER_SIZE];
         sprintf(message, "MSG from client");
-	int timeout = 5; 
 
+	char ack_message[BUFFER_SIZE];
 	rc = UDP_Timeout_Retry(sd, &addr, message, &addr2, ack_message, timeout, BUFFER_SIZE); 
 
 	if (rc > 0)
