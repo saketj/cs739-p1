@@ -30,9 +30,10 @@ int main(int argc, char *argv[])
 
 	int sd = UDP_Open(20000);
 	int rc = UDP_FillSockAddr(&addr, "machine.cs.wisc.edu", 10000);
+	int i;
 
 	// Benchmark run
-	for (int i = 1; i <= NUM_ITERATIONS; ++i) {
+	for (i = 1; i <= NUM_ITERATIONS; ++i) {
 		// Open the file
 		fp = fopen(filename, "rb");
 		if (fp == NULL) {
