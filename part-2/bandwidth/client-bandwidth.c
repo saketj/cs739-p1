@@ -9,8 +9,32 @@
 
 #define BUFFER_SIZE 65507 // MAX UDP packet size
 #define ACK_SIZE 4
-#define NUM_ITERATIONS 10
+#define NUM_ITERATIONS 1000
 #define BILLION 1000000000L
+
+double median(int n, int x[]) {
+  double temp;
+  int i, j;
+  // the following two loops sort the array x in ascending order
+  for(i=0; i<n-1; i++) {
+    for(j=i+1; j<n; j++) {
+      if(x[j] < x[i]) {
+	// swap elements
+	temp = x[i];
+	x[i] = x[j];
+	x[j] = temp;
+      }
+    }
+  }
+
+  if(n%2==0) {
+    // if there is an even number of elements, return mean of the two elements in the middle
+    return((x[n/2] + x[n/2 - 1]) / 2.0);
+  } else {
+    // else return the element in the middle
+    return x[n/2];
+  }
+}
 
 int main(int argc, char *argv[])
 {
@@ -22,7 +46,7 @@ int main(int argc, char *argv[])
 	sscanf(argv[1], "%d", &timeout);
 	char *filename = argv[2];
 	FILE *fp;
-
+	
 	uint64_t total_time = 0;
 	struct timespec start, end;
 
@@ -33,9 +57,10 @@ int main(int argc, char *argv[])
 	int sd = UDP_Open(20000);
 	int rc = UDP_FillSockAddr(&addr, SERVER_IP, 10000);
 	int i;
+	int results[NUM_ITERATIONS];
 
 	// Benchmark run
-	for (i = 1; i <= NUM_ITERATIONS; ++i) {
+	for (i = 0; i < NUM_ITERATIONS; ++i) {
 		// Open the file
 		fp = fopen(filename, "rb");
 		if (fp == NULL) {
@@ -51,12 +76,11 @@ int main(int argc, char *argv[])
 
 				iter_time += BILLION * (end.tv_sec - start.tv_sec) + end.tv_nsec - start.tv_nsec;
 		}
-
-		printf("Iteration %d\tTotal time taken = %llu nanoseconds\n", i, (long long unsigned int) iter_time);
-		total_time += iter_time;
+		results[i] = iter_time;
+		// printf("Iteration %d\tTotal time taken = %llu nanoseconds\n", i, (long long unsigned int) iter_time);
 		fclose(fp);
 	}
-	double mean_time = (double)(((double) total_time) / ((double) NUM_ITERATIONS));
-	printf("Mean time taken = %f nanoseconds\n", mean_time);
+	double median_time = median(NUM_ITERATIONS, results);
+	printf("Median time taken = %f nanoseconds for %s data.\n", median_time, filename);
 	return 0;
 }
