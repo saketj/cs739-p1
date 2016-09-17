@@ -5,6 +5,8 @@
 
 #include "../lib.h"
 
+#define SERVER_IP "127.0.0.1"
+
 #define BUFFER_SIZE 65507 // MAX UDP packet size
 #define ACK_SIZE 4
 #define NUM_ITERATIONS 10
@@ -29,7 +31,7 @@ int main(int argc, char *argv[])
 	char ack_message[ACK_SIZE];
 
 	int sd = UDP_Open(20000);
-	int rc = UDP_FillSockAddr(&addr, "machine.cs.wisc.edu", 10000);
+	int rc = UDP_FillSockAddr(&addr, SERVER_IP, 10000);
 	int i;
 
 	// Benchmark run
