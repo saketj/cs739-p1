@@ -5,14 +5,14 @@
 
 #include "../lib.h"
 
-#define SERVER_IP "127.0.0.1"
+#define SERVER_IP "128.105.37.193"
 
 #define BUFFER_SIZE 65507 // MAX UDP packet size
 #define ACK_SIZE 4
-#define NUM_ITERATIONS 1000
+#define NUM_ITERATIONS 10
 #define BILLION 1000000000L
 
-double median(int n, int x[]) {
+double median(int n, uint64_t *x) {
   double temp;
   int i, j;
   // the following two loops sort the array x in ascending order
@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 	int sd = UDP_Open(20000);
 	int rc = UDP_FillSockAddr(&addr, SERVER_IP, 10000);
 	int i;
-	int results[NUM_ITERATIONS];
+	uint64_t *results = (uint64_t *) malloc(NUM_ITERATIONS * sizeof(uint64_t));
 
 	// Benchmark run
 	for (i = 0; i < NUM_ITERATIONS; ++i) {
@@ -77,10 +77,11 @@ int main(int argc, char *argv[])
 				iter_time += BILLION * (end.tv_sec - start.tv_sec) + end.tv_nsec - start.tv_nsec;
 		}
 		results[i] = iter_time;
-		// printf("Iteration %d\tTotal time taken = %llu nanoseconds\n", i, (long long unsigned int) iter_time);
+		printf("Iteration %d\tTotal time taken = %llu nanoseconds\n", i, (long long unsigned int) iter_time);
 		fclose(fp);
 	}
 	double median_time = median(NUM_ITERATIONS, results);
 	printf("Median time taken = %f nanoseconds for %s data.\n", median_time, filename);
+	free(results);
 	return 0;
 }

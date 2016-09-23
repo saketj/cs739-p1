@@ -9,3 +9,5 @@
 ./client.out 1 ./256-mb-file.out
 ./client.out 1 ./512-mb-file.out
 ./client.out 1 ./1-gb-file.out
+./client.out 1 ./2-gb-file.out
+./client.out 1 ./4-gb-file.out
