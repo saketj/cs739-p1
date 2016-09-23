@@ -30,7 +30,7 @@
 #
 
 CXX = g++
-CPPFLAGS += -I/usr/local/include -pthread
+CPPFLAGS += `pkg-config --cflags protobuf grpc`
 CXXFLAGS += -std=c++11
 LDFLAGS += -L/usr/local/lib `pkg-config --libs grpc++ grpc`       \
            -Wl,--no-as-needed -lgrpc++_reflection -Wl,--as-needed \
