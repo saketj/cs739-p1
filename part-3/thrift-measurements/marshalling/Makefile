@@ -30,9 +30,9 @@
 #
 
 CXX = g++
-CPPFLAGS += -I gen-cpp
+CPPFLAGS += `pkg-config --cflags thrift`
 CXXFLAGS += -std=c++11
-LDFLAGS += -lboost_system -lpthread -lthrift
+LDFLAGS += `pkg-config --libs thrift` -I/unsup/boost-1.58.0/include
 THRIFT = thrift
 THRIFTFLAGS = -r --gen cpp
 
