@@ -37,6 +37,7 @@
 #include <ctime>
 #include <cstdint>
 #include <cstdlib>
+#include <cstdio>
 #include <vector>
 #include <algorithm>
 
@@ -67,6 +68,9 @@ class GreeterClient {
     // Data we are sending to the server.
     HelloRequest request;
     int *arr = new int[size];
+    for (int i = 0; i < size; ++i) {
+    	arr[i] = rand() % 0x999999 + 1;
+    }
     for (int i = 0; i < size; ++i) {
     	request.add_data(arr[i]);
     }
@@ -127,8 +131,8 @@ int main(int argc, char** argv) {
       clock_gettime(CLOCK_REALTIME, &end);	/* mark end time */
       results[itr] = BILLION * (end.tv_sec - start.tv_sec) + end.tv_nsec - start.tv_nsec;
     }
-    std::cout << "Bytes = " << (size * 4) << " RTT = " << findMedian(results) << " ns" << std::endl;
-  }
+    printf("Bytes = %d RTT = %f ns\n", size * 4, findMedian(results));
+ }
   
   return 0;
 }
