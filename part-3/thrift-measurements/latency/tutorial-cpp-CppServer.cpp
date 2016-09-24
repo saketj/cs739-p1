@@ -33,6 +33,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <sstream>
+#include <vector>
 
 #include "gen-cpp/Calculator.h"
 
@@ -50,9 +51,8 @@ class CalculatorHandler : public CalculatorIf {
 public:
   CalculatorHandler() {}
 
-  int32_t add(const int32_t n1, const int32_t n2) {
-    cout << "add(" << n1 << ", " << n2 << ")" << endl;
-    return n1 + n2;
+  int32_t add(const vector<int32_t> &nums) {
+    return 0;
   }
 
   void getStruct(SharedStruct& ret, const int32_t logid) {
