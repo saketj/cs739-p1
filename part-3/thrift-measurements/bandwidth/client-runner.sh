@@ -1,0 +1,10 @@
+./client.out 1 ./data/1-mb-file.out
+./client.out 1 ./data/2-mb-file.out
+./client.out 1 ./data/4-mb-file.out
+./client.out 1 ./data/8-mb-file.out
+./client.out 1 ./data/16-mb-file.out
+./client.out 1 ./data/32-mb-file.out
+./client.out 1 ./data/64-mb-file.out
+./client.out 1 ./data/128-mb-file.out
+./client.out 1 ./data/256-mb-file.out
+./client.out 1 ./data/512-mb-file.out
