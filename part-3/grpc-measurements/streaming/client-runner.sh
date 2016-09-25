@@ -1,0 +1,10 @@
+./greeter_client.out ./data/1-mb-file.out
+./greeter_client.out ./data/2-mb-file.out
+./greeter_client.out ./data/4-mb-file.out
+./greeter_client.out ./data/8-mb-file.out
+./greeter_client.out ./data/16-mb-file.out
+./greeter_client.out ./data/32-mb-file.out
+./greeter_client.out ./data/64-mb-file.out
+./greeter_client.out ./data/128-mb-file.out
+./greeter_client.out ./data/256-mb-file.out
+./greeter_client.out ./data/512-mb-file.out
