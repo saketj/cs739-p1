@@ -145,7 +145,7 @@ int main(int argc, char** argv) {
 	      results[itr] = BILLION * (end.tv_sec - start.tv_sec) + end.tv_nsec - start.tv_nsec;
 	  }
           delete data;
-	  printf("Median time taken = %f nanoseconds for %d MB data.\n", findMedian(results), i);
+	  printf("Median time taken = %f nanoseconds for %d bytes data.\n", findMedian(results), times * packet_size_in_int * 4);
   }
   return 0;
 }
