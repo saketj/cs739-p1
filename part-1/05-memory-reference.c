@@ -9,9 +9,9 @@
 #include <asm/unistd.h>
 
 #define BILLION 1000000000L
-#define NUM_ITERATIONS 1000000 // 1 million
-#define ARR_SIZE 100000000 // 100 million elements => 400MB => less than size of L2 cache
-#define STEP_SIZE 10000 // 10K elements => 40K bytes => more than the size of L1 cache
+#define NUM_ITERATIONS 100 // 1 million
+#define ARR_SIZE 100000000 // 100 million elements => 400MB => more than the size of caches
+#define STEP_SIZE 2000000 // 2 million elements => 8MB => more than the size of L3 cache
 
 int main(int argc, char **argv)
 {
@@ -37,12 +37,7 @@ int main(int argc, char **argv)
     clock_gettime(CLOCK_MONOTONIC, &end);	/* mark the end time */
     base = BILLION * (end.tv_sec - start.tv_sec) + end.tv_nsec - start.tv_nsec;
     
-    // Warm the cache.
-    for (i = 0; i < NUM_ITERATIONS; ++i) {
-       idx = i % ARR_SIZE;
-       num = arr[idx];
-    } 
-    
+        
     // Now do measurement with memory access.
     clock_gettime(CLOCK_MONOTONIC, &start);	/* mark start time */      
     for (i = 0; i < NUM_ITERATIONS; ++i) {
@@ -55,8 +50,8 @@ int main(int argc, char **argv)
     total_time = BILLION * (end.tv_sec - start.tv_sec) + end.tv_nsec - start.tv_nsec;
     
     printf("Value of num = %d\n", num);
-    double cache_ref_time = (double)(total_time - base) / (double)(NUM_ITERATIONS);
-    printf("L2 cache reference time = %f nanoseconds \n", cache_ref_time);
+    double mem_ref_time = (double)(total_time - base) / (double)(NUM_ITERATIONS);
+    printf("Memory reference time = %f nanoseconds \n", mem_ref_time);
     
     free(arr);
     return 0;
