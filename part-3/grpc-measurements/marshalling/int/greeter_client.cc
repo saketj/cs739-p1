@@ -1,5 +1,5 @@
 /*
- *
+/bin/bash: 00: command not found
  * Copyright 2015, Google Inc.
  * All rights reserved.
  *
@@ -34,6 +34,12 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <ctime>
+#include <cstdint>
+#include <cstdlib>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
 
 #include <grpc++/grpc++.h>
 
@@ -46,6 +52,11 @@ using helloworld::HelloRequest;
 using helloworld::HelloReply;
 using helloworld::Greeter;
 
+
+#define SERVER_IP "128.105.37.193"
+#define BILLION 1000000000L
+#define NUM_ITERATIONS 100
+
 class GreeterClient {
  public:
   GreeterClient(std::shared_ptr<Channel> channel)
@@ -53,17 +64,23 @@ class GreeterClient {
 
   // Assambles the client's payload, sends it and presents the response back
   // from the server.
-  std::string SayHello(const std::string& user) {
-    // Data we are sending to the server.
-    HelloRequest request;
-    request.set_name(user);
-
+  char SayHello(int size) {
     // Container for the data we expect from the server.
     HelloReply reply;
 
     // Context for the client. It could be used to convey extra information to
     // the server and/or tweak certain RPC behaviors.
     ClientContext context;
+
+    double total_time = 0;
+    struct timespec start, end;
+    clock_gettime(CLOCK_REALTIME, &start);	/* mark start time */
+    // Data we are sending to the server.
+    HelloRequest request;
+    request.set_data(size);
+    clock_gettime(CLOCK_REALTIME, &end);	/* mark end time */
+    total_time = BILLION * (end.tv_sec - start.tv_sec) + end.tv_nsec - start.tv_nsec;
+    printf("Marshalling time = %f\n", total_time);
 
     // The actual RPC.
     Status status = stub_->SayHello(&context, request, &reply);
@@ -74,31 +91,25 @@ class GreeterClient {
     } else {
       std::cout << status.error_code() << ": " << status.error_message()
                 << std::endl;
-      return "RPC failed";
-    }
-  }
-
-  std::string SayHelloAgain(const std::string& user) {
-    // Follows the same pattern as SayHello.
-    HelloRequest request;
-    request.set_name(user);
-    HelloReply reply;
-    ClientContext context;
-
-    // Here we can the stub's newly available method we just added.
-    Status status = stub_->SayHelloAgain(&context, request, &reply);
-    if (status.ok()) {
-      return reply.message();
-    } else {
-      std::cout << status.error_code() << ": " << status.error_message()
-                << std::endl;
-      return "RPC failed";
+      return '0';
     }
   }
 
  private:
   std::unique_ptr<Greeter::Stub> stub_;
 };
+
+double findMedian(std::vector<uint64_t> &vec) {
+  std::sort(vec.begin(), vec.end());
+  int size = vec.size();
+  if (size % 2 == 0) {
+    double val = (double)(vec[size/2] + vec[size/2 + 1]) / (double)2.0f;
+    return val;
+  }
+  else {
+    return vec[size/2];
+  }
+}
 
 int main(int argc, char** argv) {
   // Instantiate the client. It requires a channel, out of which the actual RPCs
@@ -107,11 +118,11 @@ int main(int argc, char** argv) {
   // (use of InsecureChannelCredentials()).
   GreeterClient greeter(grpc::CreateChannel(
       "localhost:50051", grpc::InsecureChannelCredentials()));
-  std::string user("world");
-  std::string reply = greeter.SayHello(user);
-  std::cout << "Greeter received: " << reply << std::endl;
-  
-  reply = greeter.SayHelloAgain(user);
-  std::cout << "Greeter received: " << reply << std::endl;
+
+    for (int itr = 0; itr < NUM_ITERATIONS; ++itr) {
+      int size = 0x5555555;
+      char reply = greeter.SayHello(size);
+    }
+
   return 0;
 }
